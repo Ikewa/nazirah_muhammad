@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (targetElement) {
         e.preventDefault();
 
-        // Close mobile menu if open
         if (mainNav && mainNav.classList.contains('active')) {
           mainNav.classList.remove('active');
           menuBtn?.setAttribute('aria-expanded', 'false');
@@ -39,27 +38,26 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         }
 
-        // Pre-populate contact form subject/message if data-subject is present
         const customSubject = this.getAttribute('data-subject');
         if (customSubject && inquirySelect) {
-          // Match closest option or add a dynamic note in the message box
-          if (customSubject.toLowerCase().includes('donate') || customSubject.toLowerCase().includes('support') || customSubject.toLowerCase().includes('sponsor')) {
+          const lower = customSubject.toLowerCase();
+          if (lower.includes('donate') || lower.includes('support') || lower.includes('sponsor')) {
             inquirySelect.value = 'Support / Donate to a Campaign';
-          } else if (customSubject.toLowerCase().includes('volunteer') || customSubject.toLowerCase().includes('mentor')) {
+          } else if (lower.includes('volunteer') || lower.includes('mentor')) {
             inquirySelect.value = 'Volunteer or Mentor Inquiry';
-          } else if (customSubject.toLowerCase().includes('school') || customSubject.toLowerCase().includes('sensitisation')) {
+          } else if (lower.includes('school') || lower.includes('sensitisation') || lower.includes('invite')) {
             inquirySelect.value = 'School / Community Sensitisation Request';
           } else {
             inquirySelect.value = 'Partnership With BCRE';
           }
 
-          if (messageTextarea && !messageTextarea.value.trim()) {
-            messageTextarea.value = `Re: ${customSubject}\n\nHello BCRE Foundation Team,\nI would like to inquire about `;
+          if (messageTextarea) {
+            messageTextarea.value = `Re: ${customSubject}\n\nHello BCRE Foundation Team,\nI would like to connect regarding `;
           }
         }
 
         window.scrollTo({
-          top: targetElement.offsetTop - 82,
+          top: targetElement.offsetTop - 80,
           behavior: 'smooth'
         });
       }
@@ -68,10 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. Active Navigation Highlight on Scroll
   const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.main-nav a[href^="#"]:not(.btn)');
+  const navLinks = document.querySelectorAll('.main-nav ul a[href^="#"]');
 
   const updateActiveNav = () => {
-    const scrollPos = window.scrollY + 130;
+    const scrollPos = window.scrollY + 140;
     sections.forEach(sec => {
       const top = sec.offsetTop;
       const height = sec.offsetHeight;
@@ -85,38 +83,18 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   window.addEventListener('scroll', updateActiveNav, { passive: true });
 
-  // 4. Founder Portrait Switcher (Inside About Us / Founder Spotlight)
-  const founderActiveImg = document.getElementById('founder-active-img');
-  const founderThumbs = document.querySelectorAll('.founder-thumb');
-
-  if (founderActiveImg && founderThumbs.length > 0) {
-    founderThumbs.forEach(thumb => {
-      thumb.addEventListener('click', () => {
-        const newSrc = thumb.getAttribute('data-img');
-        if (!newSrc) return;
-        founderThumbs.forEach(t => t.classList.remove('active'));
-        thumb.classList.add('active');
-        founderActiveImg.style.opacity = '0.35';
-        setTimeout(() => {
-          founderActiveImg.setAttribute('src', newSrc);
-          founderActiveImg.style.opacity = '1';
-        }, 140);
-      });
-    });
-  }
-
-  // 5. Programme & Campaign Status Filtering
+  // 4. Campaign & Cause Cards Filter
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const programmeCards = document.querySelectorAll('.programme-card');
+  const causeCards = document.querySelectorAll('.cause-card');
 
-  if (filterBtns.length > 0 && programmeCards.length > 0) {
+  if (filterBtns.length > 0 && causeCards.length > 0) {
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const filter = btn.getAttribute('data-filter');
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        programmeCards.forEach(card => {
+        causeCards.forEach(card => {
           const categories = (card.getAttribute('data-category') || '').split(' ');
           if (filter === 'all' || categories.includes(filter)) {
             card.classList.remove('hidden');
@@ -128,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 6. Contact Form Validation & Mailto Routing
+  // 5. Contact Form Validation & Mailto Routing
   const contactForm = document.getElementById('bcre-contact-form');
   const formFeedback = document.getElementById('form-feedback');
 
@@ -150,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!consent) {
         formFeedback.className = 'form-feedback error';
-        formFeedback.textContent = 'Please check the privacy and safeguarding consent box before sending.';
+        formFeedback.textContent = 'Please check the privacy and child-safeguarding consent box before sending.';
         return;
       }
 
@@ -161,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const mailtoLink = `mailto:Bintachildrightempowerment@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
 
       formFeedback.className = 'form-feedback success';
-      formFeedback.innerHTML = `Thank you, <strong>${name}</strong>! Your inquiry is ready. Opening your email client to send directly to <strong>Bintachildrightempowerment@gmail.com</strong>...`;
+      formFeedback.innerHTML = `Thank you, <strong>${name}</strong>! Opening your email client to send directly to <strong>Bintachildrightempowerment@gmail.com</strong>...`;
 
       window.location.href = mailtoLink;
     });
