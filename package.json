@@ -1,7 +1,7 @@
 {
-  "name": "nazirah-muhammad-portfolio",
+  "name": "bcre-foundation-website",
   "version": "1.0.0",
-  "description": "Portfolio website for Nazirah Muhammad",
+  "description": "Official website for Binta Child Rights & Empowerment Foundation (BCRE), founded by Nazirah Muhammad",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
